@@ -770,53 +770,60 @@ const ImportModal = ({ deck, collectionCards, isOnline, onClose, onAddCard, onRe
 };
   
   const handleImport = async () => {
-    const cards = parseList(importText);
-    if (cards.length === 0) return;
-    
-    setImporting(true);
-    setResults({ total: cards.length, success: 0, failed: [] });
-    
-    for (const card of cards) {
-      try {
-        // Chercher la carte sur Scryfall
-        const response = await fetch(`https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(card.name)}`);
-        if (response.ok) {
-          const cardData = await response.json();
-          
-          // Vérifier si dans la collection
-          const inCollection = collectionCards.find(c => 
-            c.nom.toLowerCase() === cardData.name.toLowerCase()
-          );
-          
-          // Ajouter au deck
-          await onAddCard({
-            name: cardData.name,
-            mana_cost: cardData.mana_cost,
-            cmc: cardData.cmc,
-            type_line: cardData.type_line,
-            colors: cardData.colors,
-            color_identity: cardData.color_identity,
-            oracle_text: cardData.oracle_text,
-            image_uris: cardData.image_uris,
-            set: cardData.set,
-            set_name: cardData.set_name
-          }, collectionCards, card.qty);
-          
-          setResults(r => ({ ...r, success: r.success + 1 }));
-        } else {
-          setResults(r => ({ ...r, failed: [...r.failed, card.name] }));
-        }
-      } catch (error) {
-        setResults(r => ({ ...r, failed: [...r.failed, card.name] }));
+  const cards = parseList(importText);
+  if (cards.length === 0) return;
+
+  setImporting(true);
+  setResults({ total: cards.length, success: 0, failed: [] });
+
+  // Envoyer par batch de 75 (limite Scryfall)
+  const batchSize = 75;
+  for (let i = 0; i < cards.length; i += batchSize) {
+    const batch = cards.slice(i, i + batchSize);
+
+    const response = await fetch('https://api.scryfall.com/cards/collection', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        identifiers: batch.map(c => ({ name: c.name }))
+      })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      // Cartes trouvées
+      for (const cardData of data.data) {
+        const card = batch.find(c => c.name.toLowerCase() === cardData.name.toLowerCase())
+          || batch.find(c => cardData.name.toLowerCase().includes(c.name.toLowerCase()));
+        const qty = card?.qty || 1;
+
+        await onAddCard({
+          name: cardData.name,
+          mana_cost: cardData.mana_cost,
+          cmc: cardData.cmc,
+          type_line: cardData.type_line,
+          colors: cardData.colors,
+          color_identity: cardData.color_identity,
+          oracle_text: cardData.oracle_text,
+          image_uris: cardData.image_uris,
+          set: cardData.set,
+          set_name: cardData.set_name
+        }, collectionCards, qty);
+
+        setResults(r => ({ ...r, success: r.success + 1 }));
       }
-      
-      // Petit délai pour pas surcharger Scryfall
-      await new Promise(r => setTimeout(r, 100));
+
+      // Cartes non trouvées
+      for (const not_found of data.not_found) {
+        setResults(r => ({ ...r, failed: [...r.failed, not_found.name] }));
+      }
     }
-    
-    setImporting(false);
-    onReload();
-  };
+  }
+
+  setImporting(false);
+  onReload();
+};
   
   const cardCount = parseList(importText).length;
   
