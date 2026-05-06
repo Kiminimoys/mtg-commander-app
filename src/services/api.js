@@ -7,8 +7,7 @@
  * URL du serveur : http://mtg-commander-toolkit.duckdns.org:3000
  */
 
-//const API_URL = '/api';
-const API_URL = 'https://mtg-commander-toolkit.duckdns.org/api';
+const API_URL = '/api';
 
 /**
  * Récupère le token JWT stocké dans localStorage
