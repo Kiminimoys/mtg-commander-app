@@ -771,15 +771,28 @@ const ImportModal = ({ deck, collectionCards, isOnline, onClose, onAddCard, onRe
   
   const handleImport = async () => {
   const cards = parseList(importText);
+  // Récupérer les noms des cartes déjà dans le deck
+  const existingNames = deck.cards?.map(c => c.card_name?.toLowerCase()) || [];
+
+  // Filtrer les cartes déjà présentes
+  const newCards = cards.filter(c => 
+    !existingNames.includes(c.name.toLowerCase())
+  );
+
+  if (newCards.length === 0) {
+    setResults({ total: 0, success: 0, failed: [] });
+    setImporting(false);
+    return;
+  }
   if (cards.length === 0) return;
 
   setImporting(true);
-  setResults({ total: cards.length, success: 0, failed: [] });
+  setResults({ total: newCards.length, success: 0, failed: [] });
 
   // Envoyer par batch de 75 (limite Scryfall)
   const batchSize = 75;
-  for (let i = 0; i < cards.length; i += batchSize) {
-    const batch = cards.slice(i, i + batchSize);
+  for (let i = 0; i < newCards.length; i += batchSize) {
+    const batch = newCards.slice(i, i + batchSize);
 
     const response = await fetch('https://api.scryfall.com/cards/collection', {
       method: 'POST',
