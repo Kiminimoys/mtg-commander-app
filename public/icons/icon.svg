@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Gradient pour le bouclier -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4c1d95"/>
+      <stop offset="50%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#4c1d95"/>
+    </linearGradient>
+    <!-- Gradient pour le symbole Planeswalker -->
+    <linearGradient id="pwGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fcd34d"/>
+      <stop offset="50%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#dc2626"/>
+    </linearGradient>
+    <!-- Ombre portée -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+    <!-- Lueur dorée -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Fond -->
+  <rect width="512" height="512" rx="80" fill="#0f0f14"/>
+  
+  <!-- Bouclier -->
+  <path d="M256 60 
+           L420 120 
+           L420 260 
+           Q420 380 256 460 
+           Q92 380 92 260 
+           L92 120 Z" 
+        fill="url(#shieldGrad)" 
+        stroke="#a78bfa" 
+        stroke-width="4"
+        filter="url(#shadow)"/>
+  
+  <!-- Bordure intérieure du bouclier -->
+  <path d="M256 85 
+           L395 138 
+           L395 255 
+           Q395 360 256 432 
+           Q117 360 117 255 
+           L117 138 Z" 
+        fill="none" 
+        stroke="#c4b5fd" 
+        stroke-width="2"
+        opacity="0.5"/>
+  
+  <!-- Symbole Planeswalker stylisé -->
+  <g filter="url(#glow)" transform="translate(256, 265)">
+    <!-- Flamme centrale (grande) -->
+    <path d="M0 -140 
+             Q30 -100 25 -60
+             Q40 -80 35 -40
+             Q50 -50 40 0
+             Q30 20 0 40
+             Q-30 20 -40 0
+             Q-50 -50 -35 -40
+             Q-40 -80 -25 -60
+             Q-30 -100 0 -140 Z"
+          fill="url(#pwGrad)"/>
+    
+    <!-- Cercle central -->
+    <circle cx="0" cy="-30" r="25" fill="#0f0f14" stroke="#fcd34d" stroke-width="3"/>
+    
+    <!-- Point central -->
+    <circle cx="0" cy="-30" r="10" fill="#fcd34d"/>
+    
+    <!-- Flammes latérales gauche -->
+    <path d="M-60 -60
+             Q-40 -40 -45 -20
+             Q-30 -30 -35 0
+             Q-25 10 -50 30
+             Q-70 10 -65 -20
+             Q-80 -30 -70 -50
+             Q-75 -60 -60 -60 Z"
+          fill="url(#pwGrad)" opacity="0.9"/>
+    
+    <!-- Flammes latérales droite -->
+    <path d="M60 -60
+             Q40 -40 45 -20
+             Q30 -30 35 0
+             Q25 10 50 30
+             Q70 10 65 -20
+             Q80 -30 70 -50
+             Q75 -60 60 -60 Z"
+          fill="url(#pwGrad)" opacity="0.9"/>
+    
+    <!-- Petites flammes extérieures -->
+    <path d="M-90 -20 Q-75 -10 -80 10 Q-65 5 -85 25 Q-100 10 -95 -10 Q-105 -15 -90 -20 Z"
+          fill="url(#pwGrad)" opacity="0.7"/>
+    <path d="M90 -20 Q75 -10 80 10 Q65 5 85 25 Q100 10 95 -10 Q105 -15 90 -20 Z"
+          fill="url(#pwGrad)" opacity="0.7"/>
+  </g>
+  
+  <!-- Texte "MTG" discret en bas -->
+  <text x="256" y="485" 
+        font-family="Arial, sans-serif" 
+        font-size="24" 
+        font-weight="bold" 
+        fill="#4c1d95" 
+        text-anchor="middle">COMMANDER</text>
+</svg>

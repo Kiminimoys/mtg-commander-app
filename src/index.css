@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Font via link dans index.html plutôt que @import */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background-color: #0f0f14;
+  background-image: linear-gradient(135deg, #0f0f14 0%, #0d0d12 100%);
+  color: #f0f0f5;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #16161d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a3a;
+  border-radius: 4px;
+}
+
+::selection {
+  background: #8b5cf6;
+  color: white;
+}
+
+.ms {
+  font-size: 1em;
+  vertical-align: middle;
+}
+
+input, select, textarea {
+  font-size: 16px;
+}
