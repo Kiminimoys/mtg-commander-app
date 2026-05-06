@@ -745,23 +745,29 @@ const ImportModal = ({ deck, collectionCards, isOnline, onClose, onAddCard, onRe
   const [results, setResults] = useState(null);
   
   const parseList = (text) => {
-    const lines = text.split('\n').filter(l => l.trim());
-    const cards = [];
-    
-    for (const line of lines) {
-      // Formats supportés: "1 Sol Ring", "1x Sol Ring", "Sol Ring"
-      const match = line.trim().match(/^(\d+)?x?\s*(.+)$/i);
-      if (match) {
-        const qty = parseInt(match[1]) || 1;
-        const name = match[2].trim();
-        if (name) {
-          cards.push({ name, qty });
-        }
+  const lines = text.split('\n').filter(l => l.trim());
+  const cards = [];
+  
+  for (const line of lines) {
+    const match = line.trim().match(/^(\d+)?x?\s*(.+)$/i);
+    if (match) {
+      const qty = parseInt(match[1]) || 1;
+      let name = match[2].trim();
+      
+      // Supprimer les annotations entre parenthèses (Commander), (Partner), etc.
+      name = name.replace(/\s*\([^)]*\)\s*/g, '').trim();
+      
+      // Garder seulement la première face pour les double-faces
+      name = name.split('//')[0].trim();
+      
+      if (name) {
+        cards.push({ name, qty });
       }
     }
-    
-    return cards;
-  };
+  }
+  
+  return cards;
+};
   
   const handleImport = async () => {
     const cards = parseList(importText);
