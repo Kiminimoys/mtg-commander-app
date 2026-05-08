@@ -810,6 +810,8 @@ const handleImport = async () => {
     if (i + batchSize < newCards.length) {
       await new Promise(r => setTimeout(r, 200));
     }
+    console.log(`Batch ${i/batchSize + 1}: cartes ${i+1} à ${Math.min(i+batchSize, newCards.length)}`);
+    const batch = newCards.slice(i, i + batchSize);
   }
 
   // Étape 2 : insérer en base
